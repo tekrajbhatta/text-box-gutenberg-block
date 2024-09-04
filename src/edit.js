@@ -3,21 +3,32 @@ import {
 	useBlockProps,
 	RichText,
 	BlockControls,
+	AlignmentToolbar,
 } from '@wordpress/block-editor';
 import {
 	ToolbarGroup,
-	ToolbarButton,
-	ToolbarDropdownMenu,
+	// 	ToolbarButton,
+	// 	ToolbarDropdownMenu,
 } from '@wordpress/components';
 import './editor.scss';
+// import { AlignmentControl, AlignmentToolbar } from '@wordpress/block-editor';
+// import { AlignmentToolbar } from '@wordpress/block-editor';
 
 export default function Edit({ attributes, setAttributes }) {
 	// console.log(attributes);
-	const { text } = attributes;
+	const { text, alignment } = attributes;
+
+	const onChangeText = (newText) => {
+		setAttributes({ text: newText });
+	};
+
+	const onChangeAlignment = (newAlignmenet) => {
+		setAttributes({ alignment: newAlignmenet });
+	};
 
 	return (
 		<>
-			<BlockControls group="inline">
+			{/* <BlockControls group="inline">
 				<p>Inline Controls</p>
 			</BlockControls>
 			<BlockControls group="block">
@@ -75,11 +86,26 @@ export default function Edit({ attributes, setAttributes }) {
 				<ToolbarGroup>
 					<p>Group 2</p>
 				</ToolbarGroup>
+			</BlockControls> */}
+
+			<BlockControls>
+				<ToolbarGroup>
+					<p>Group 1</p>
+				</ToolbarGroup>
+				<AlignmentToolbar
+					value={alignment} // to highlight the alignment icon
+					onChange={onChangeAlignment}
+				/>
+				<ToolbarGroup>
+					<p>Group 2</p>
+				</ToolbarGroup>
 			</BlockControls>
 
 			<RichText
-				{...useBlockProps()}
-				onChange={(textvalue) => setAttributes({ text: textvalue })}
+				{...useBlockProps({
+					className: `text-box-align-${alignment}`,
+				})}
+				onChange={onChangeText}
 				value={text}
 				placeholder={__('Enter your tex…', 'text-box')}
 				tagName="h4"
@@ -89,6 +115,7 @@ export default function Edit({ attributes, setAttributes }) {
 					'core/image',
 					'core/text-color',
 				]}
+				style={{ textAlign: alignment }}
 			/>
 		</>
 		// RichText Docs
